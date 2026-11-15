@@ -1,0 +1,172 @@
+# 分析参数唯一入口（冻结项）
+# 修改本文件即视为口径变更，须在 docs/decision_log.md 登记并重跑受影响的下游分析。
+# 对应研究方案 v2.1 附录中的 D1–D7。
+
+meta:
+  project: tn-whiteterm
+  plan_version: v2.1
+  frozen_on: 2026-10-16
+
+dataset:
+  name: ds005713
+  snapshot_doi: doi:10.18112/openneuro.ds005713.v2.0.3
+  snapshot_tag: v2.0.3
+  license: CC0
+  bids_version: "1.8.0"
+  s3_bucket: https://s3.amazonaws.com/openneuro.org
+  manifest: data/manifests/ds005713_files.csv
+  clinical_frozen: data/frozen/participants_frozen.tsv
+  clinical_derived: data/frozen/participants_derived.tsv
+
+# ---------- D1 皮层分区图谱 ----------
+atlas:
+  primary: Schaefer2018_200Parcels_7Networks
+  sensitivity:
+    - Schaefer2018_400Parcels_7Networks
+    - Brainnetome246
+  n_parcels: 200
+  hemisphere_policy: contralateral_to_pain_side   # 主分析；镜像对称图谱作敏感性分析
+
+# ---------- 样本纳入 ----------
+cohort:
+  patients: 119
+  controls: 53            # 有临床变量者；敏感性分析用 55（含 sub-23/sub-31）
+  exclude_no_clinical: [sub-23, sub-31]
+  longitudinal_pairs: 64
+  surgery_groups: {MVD: 79, PI: 31, Outpatient: 9}
+  surgical_outcome: {complete_relief: 82, incomplete: 20}
+
+# ---------- 混淆控制 ----------
+confounds:
+  covariates: [age, age_squared, sex, mean_fd, fazekas_grade]
+  age_mismatch_p: 0.0167          # 实测 Welch p，强制要求年龄匹配敏感性分析
+  fd_threshold_mm: 0.2
+  sensitivity_analyses:
+    - age_matched_subsample
+    - fd_matched_subsample
+    - n_matched_resampling      # 119 -> 53，重复 1000 次
+    - fazekas_stratified
+
+# ---------- 影像表型 ----------
+phenotypes:
+  A1: {name: white_matter_connectivity_strength, inputs: [streamlines, fa_weighted]}
+  A2: {name: structure_function_coupling, method: graph_harmonic, inputs: [sc_streamlines, sc_fa, fc]}
+  A3:
+    name: gray_white_contrast
+    inputs: [gwc]
+    parallel_metric: t1w_t2w_ratio
+    circularity_controls: [parallel_metric_replication, demyelination_residual_pls]
+    myelination_enrichment_role: positive_control
+  group_stat: {test: welch_t, primary_map: hedges_g}
+
+# ---------- D2/D3 AHBA ----------
+ahba:
+  donors: 6
+  n_samples_approx: 3702
+  pipeline: abagen
+  coordinates: {primary: CIC, sensitivity: [alleninf, original]}
+  normalization: {primary: sigmoid, sensitivity: [robust_sigmoid, zscore]}
+  match_radius_mm: 2
+  donor_coverage_min: 2           # 覆盖 < 2 例供体的分区剔除
+  lodo: true
+  background_genes: intersection_of_ahba_detected_and_annotatable
+
+# ---------- D4 PLS ----------
+pls:
+  n_components_report: 5
+  gene_threshold_primary: abs_z_gt_2
+  gene_threshold_sensitivity: [top_5pct, abs_z_gt_2.5]
+  stability:
+    method: [split_half, bootstrap]
+    n_resamples: 1000
+    candidate_gene_min_selection_freq: 0.8
+
+# ---------- 空间置换 ----------
+spin:
+  method: netneurotools.gen_spinsamples     # 旧接口 spin_test 已不推荐
+  n_permutations: 5000
+  seed: 20261016
+  spatial_autocorr_report: morans_i
+  multiple_comparison: {within: fwer_permutation, across_modalities: fdr_bh}
+
+# ---------- D5 跨模态收敛判据 ----------
+convergence:
+  max_pairwise_abs_r: 0.7
+  min_weight_cosine: 0.5
+  max_spin_p_fdr: 0.05
+  fallback_if_collinear: orthogonalized_residual_pls
+
+# ---------- 富集与细胞类型 ----------
+enrichment:
+  gene_sets: [GO_BP, KEGG, GSEA]
+  gene_set_level_analysis: gsea_or_magma
+  cell_type:
+    ewce: {marker_source: [BrainRNAseq, AllenBrainCellAtlas]}
+    snrna_proportion_mapping: {reference: [AllenBrainCellAtlas, Siletti2023]}
+
+# ---------- 三级验证 ----------
+validation:
+  level1_methodological: [coordinate_sets, normalizations, thresholds, lodo]
+  level2_independent_consistency: {source: Zhang2026_gene_weights, method: spatial_correlation}
+  level3_external_qualitative: [BRAINEAC, GTEx_eQTL, PsychENCODE_celltype_prior]
+
+# ---------- D6/D7 纵向与临床分层 ----------
+longitudinal:
+  design: linear_mixed_effects
+  fixed_factors: [timepoint, surgery_type, timepoint_x_surgery_type]
+  covariates: [followup_interval_days]     # 中位 202 天，17.4% > 270 天
+  moderator: postsurgery_pain_reduction_pct
+  missing_data: [complete_case, multiple_imputation]
+  include_outpatient: false                # 9 例未手术排除
+
+clinical_stratification:
+  endpoint: complete_relief_vs_not         # 82 vs 20（不平衡）
+  restricted_to: MVD                       # n=79
+  metrics: [auc, pr_auc, ci, permutation_null]
+  parallel_continuous_analysis: pain_reduction_pct
+  dose_response: disease_duration
+  moderators: [pain_type]                  # 阵发 109 vs 持续 10
+  stratification: [nvc_side, fazekas_grade]
+
+# ---------- 随机种子 ----------
+seeds:
+  global: 20261016
+  bootstrap: 20261017
+  spin: 20261018
+  resampling_nmatched: 20261019
+
+# ==========================================================================
+# D8–D12 分析决策判据（事前规则，2026-10-16 与用户确认后固化）
+# --------------------------------------------------------------------------
+# 说明：这里固化的是**判据**（如何决定），不是**结论**（谁显著）。
+# 目的：无论 A1/A2 的真实效应量大小，都能按同一套规则写论文，
+# 避免事后挑选口径（post-hoc flexibility）。任何修改都须在
+# docs/decision_log.md 登记并说明影响范围。
+# ==========================================================================
+analysis_decision_rules:
+  frozen_on: 2026-10-16
+  # D8：主分析模态固定为 A1（白质连接强度），不因结果好坏而替换
+  primary_modality: A1_streamlines
+  # D9：可进入"跨模态收敛"判定的模态集合（A3_t1t2 不在其中，见 D10）
+  convergence_members:
+    - A1_streamlines
+    - A2_coupling
+    - A3_gwc
+  # D10：髓鞘敏感指标 A3_t1t2 定位为阳性对照，其髓鞘相关富集不得作为发现
+  positive_control_modality: A3_t1t2
+  # 理由（完整说明见 docs/decision_log.md 的 D10）：T1w/T2w 以髓鞘/脂质为主要生物学来源，
+  # 与髓鞘基因存在先验关联；实测 spin p=0.0025（FDR 后显著）而组间 FDR 显著分区=0，
+  # 符合"同义重复"预期，故仅作流程有效性的阳性对照。
+  positive_control_rationale: "T1w/T2w 以髓鞘/脂质含量为主要生物学来源，与髓鞘基因表达存在先验关联；实测 spin p=0.0025 而组间 FDR 显著分区=0，符合同义重复预期，故仅作阳性对照"
+  # D11：组间图谱未过 FDR 的模态如何处理
+  null_phenotype_policy:
+    report_as: null_result
+    excluded_from_convergence: true
+    transcriptomic_assoc_label: exploratory_only
+    note: "该模态的转录组关联可报告，但须标注探索性，且不得用于'共享分子基础'类结论"
+  # D12：不做事后换阈值凑显著
+  post_hoc_threshold_policy:
+    forbidden: true
+    allowed_if_labeled_exploratory: true
+    required_label_when_relaxed: "未校正阈值，探索性分析"
+

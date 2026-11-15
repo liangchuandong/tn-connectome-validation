@@ -1,0 +1,242 @@
+{
+  "derivatives_dir": "F:\\ds005713\\derivatives",
+  "clinical": "C:\\Users\\HUAWEI\\Documents\\deepseek-harness\\default-workspace\\tn-whiteterm\\data\\frozen\\participants_derived.tsv",
+  "n_parcels": 200,
+  "n_modes_A2": null,
+  "residualized": true,
+  "phenotypes": [
+    {
+      "phenotype": "A1_streamlines",
+      "n_subjects": 135,
+      "n_parcels": 200,
+      "frac_finite": 1.0,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 1675.967973332361,
+      "value_sd": 1157.3572530360268
+    },
+    {
+      "phenotype": "A1_fa",
+      "n_subjects": 135,
+      "n_parcels": 200,
+      "frac_finite": 1.0,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 39.20779675581855,
+      "value_sd": 14.29744729957538
+    },
+    {
+      "phenotype": "A3_gwc",
+      "n_subjects": 138,
+      "n_parcels": 200,
+      "frac_finite": 0.9927898550724638,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 0.6550716926635269,
+      "value_sd": 0.0874227794040119
+    },
+    {
+      "phenotype": "A3_t1t2",
+      "n_subjects": 138,
+      "n_parcels": 200,
+      "frac_finite": 0.9927898550724638,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 0.9631917742170347,
+      "value_sd": 0.6000142808502705
+    },
+    {
+      "phenotype": "A3_t1t2_std",
+      "n_subjects": 138,
+      "n_parcels": 200,
+      "frac_finite": 0.9927898550724638,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 0.5359116615157768,
+      "value_sd": 0.14970918226884067
+    },
+    {
+      "phenotype": "A2_coupling",
+      "n_subjects": 132,
+      "n_parcels": 200,
+      "frac_finite": 0.9839772727272728,
+      "parcels_all_nan": 0,
+      "subjects_all_nan": 0,
+      "value_mean": 0.265947148649564,
+      "value_sd": 0.09191782155370713
+    }
+  ],
+  "contrasts": {
+    "A1_streamlines": {
+      "n_patient": 92,
+      "n_control": 43,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.6741277910876269,
+      "min_p": 0.0012422478147479387
+    },
+    "A1_fa": {
+      "n_patient": 92,
+      "n_control": 43,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.5258316304095264,
+      "min_p": 0.0032064338610239534
+    },
+    "A3_gwc": {
+      "n_patient": 94,
+      "n_control": 44,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.5626032025440948,
+      "min_p": 0.003013573771542908
+    },
+    "A3_t1t2": {
+      "n_patient": 94,
+      "n_control": 44,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.29447853538707136,
+      "min_p": 0.05191889684261255
+    },
+    "A3_t1t2_std": {
+      "n_patient": 94,
+      "n_control": 44,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.5105832332441373,
+      "min_p": 0.005239834206368075
+    },
+    "A2_coupling": {
+      "n_patient": 91,
+      "n_control": 41,
+      "n_fdr_significant": 0,
+      "max_abs_g": 0.46685566323805816,
+      "min_p": 0.020098426737425134
+    }
+  },
+  "sensitivity": {
+    "nmatched_A1_streamlines": {
+      "n_rep": 1000,
+      "n_small": 43,
+      "g_mean_median": -0.11394274418711509,
+      "sign_consistency_median": 0.8905000000000001,
+      "sign_consistency_min": 0.488
+    },
+    "age_matched_A1_streamlines": {
+      "n_matched": 80,
+      "n_patient": 40,
+      "n_control": 40,
+      "spatial_r_with_full_sample": 0.8210643793041313,
+      "max_abs_g": 0.7822230069548103
+    },
+    "bold_mean_fd_matched_A1_streamlines": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.19311311519213098,
+      "max_abs_g": 0.9823237303908778
+    },
+    "nmatched_A1_fa": {
+      "n_rep": 1000,
+      "n_small": 43,
+      "g_mean_median": -0.011969898341903963,
+      "sign_consistency_median": 0.839,
+      "sign_consistency_min": 0.491
+    },
+    "age_matched_A1_fa": {
+      "n_matched": 80,
+      "n_patient": 40,
+      "n_control": 40,
+      "spatial_r_with_full_sample": 0.8668431252619482,
+      "max_abs_g": 0.7369188418891889
+    },
+    "bold_mean_fd_matched_A1_fa": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.26063840188006737,
+      "max_abs_g": 1.0963766349992539
+    },
+    "nmatched_A3_gwc": {
+      "n_rep": 1000,
+      "n_small": 44,
+      "g_mean_median": 0.09527416990730808,
+      "sign_consistency_median": 0.9359999999999999,
+      "sign_consistency_min": 0.483
+    },
+    "age_matched_A3_gwc": {
+      "n_matched": 80,
+      "n_patient": 40,
+      "n_control": 40,
+      "spatial_r_with_full_sample": 0.9344956494126919,
+      "max_abs_g": 0.6137012116248072
+    },
+    "bold_mean_fd_matched_A3_gwc": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.4278952773557471,
+      "max_abs_g": 1.5494977120098286
+    },
+    "nmatched_A3_t1t2": {
+      "n_rep": 1000,
+      "n_small": 44,
+      "g_mean_median": 0.15925427417107635,
+      "sign_consistency_median": 0.921,
+      "sign_consistency_min": 0.752
+    },
+    "age_matched_A3_t1t2": {
+      "n_matched": 80,
+      "n_patient": 40,
+      "n_control": 40,
+      "spatial_r_with_full_sample": 0.6929086950681657,
+      "max_abs_g": 0.5580573792081258
+    },
+    "bold_mean_fd_matched_A3_t1t2": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.6236904103644166,
+      "max_abs_g": 0.8709434291302658
+    },
+    "nmatched_A3_t1t2_std": {
+      "n_rep": 1000,
+      "n_small": 44,
+      "g_mean_median": 0.04104891855418021,
+      "sign_consistency_median": 0.8354999999999999,
+      "sign_consistency_min": 0.468
+    },
+    "age_matched_A3_t1t2_std": {
+      "n_matched": 80,
+      "n_patient": 40,
+      "n_control": 40,
+      "spatial_r_with_full_sample": 0.6997819760209374,
+      "max_abs_g": 0.5791879951037955
+    },
+    "bold_mean_fd_matched_A3_t1t2_std": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.3674136684964312,
+      "max_abs_g": 0.9380799795678119
+    },
+    "nmatched_A2_coupling": {
+      "n_rep": 1000,
+      "n_small": 41,
+      "g_mean_median": -0.06308474403097845,
+      "sign_consistency_median": 0.841,
+      "sign_consistency_min": 0.489
+    },
+    "age_matched_A2_coupling": {
+      "n_matched": 76,
+      "n_patient": 38,
+      "n_control": 38,
+      "spatial_r_with_full_sample": 0.8908523214019325,
+      "max_abs_g": 0.6131658021232615
+    },
+    "bold_mean_fd_matched_A2_coupling": {
+      "n_matched": 22,
+      "n_patient": 11,
+      "n_control": 11,
+      "spatial_r_with_full_sample": 0.42405319363908817,
+      "max_abs_g": 1.3192030458692023
+    }
+  },
+  "total_seconds": 719.7
+}
